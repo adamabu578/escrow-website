@@ -36,12 +36,12 @@ export default function Onboarding() {
     if (currentStep < ONBOARDING_STEPS.length - 1) {
       setCurrentStep(prev => prev + 1);
     } else {
-      router.push('/login');
+      router.push('/welcome');
     }
   };
 
   const handleSkip = () => {
-    router.push('/login');
+    router.push('/welcome');
   };
 
   const handleBack = () => {
