@@ -39,7 +39,7 @@ export default function Welcome() {
       {/* Bottom Section */}
       <div className="bg-white pt-10 pb-12 px-8 flex flex-col items-center">
         <Link 
-          href="/register" 
+          href="/login" 
           className="w-full max-w-sm py-4 rounded-lg bg-[#32A05F] text-white text-center font-medium text-[17px] hover:bg-green-700 transition-colors shadow-sm mb-6"
         >
           Get Started
