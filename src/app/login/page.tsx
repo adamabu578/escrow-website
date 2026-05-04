@@ -8,7 +8,9 @@ import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 export default function Login() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [loginMethod, setLoginMethod] = useState<'email' | 'mobile'>('email');
   const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -34,29 +36,59 @@ export default function Login() {
         <h1 className="text-[#475569] text-[28px] font-semibold leading-none">
           Log In
         </h1>
-        <button className="text-[14px] text-[#94A3B8] hover:opacity-80 transition-opacity pb-1">
-          or <span className="text-[#32A05F]">Log in with mobile?</span>
+        <button 
+          onClick={() => setLoginMethod(loginMethod === 'email' ? 'mobile' : 'email')}
+          className="text-[14px] text-[#94A3B8] hover:opacity-80 transition-opacity pb-1"
+        >
+          or <span className="text-[#32A05F]">Log in with {loginMethod === 'email' ? 'mobile' : 'email'}?</span>
         </button>
       </div>
 
       {/* Form Section */}
       <form className="flex flex-col space-y-6" onSubmit={(e) => e.preventDefault()}>
         
-        {/* Email Field */}
-        <div className="flex flex-col space-y-2">
-          <label className="text-[#64748B] text-[15px] font-medium" htmlFor="email">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Please enter email"
-            className="w-full bg-[#F8FAFC] border-none rounded-xl px-4 py-4 text-[15px] text-slate-800 placeholder:text-[#CBD5E1] focus:outline-none focus:ring-1 focus:ring-[#32A05F] transition-shadow"
-            required
-          />
-        </div>
+        {/* Dynamic Field */}
+        {loginMethod === 'email' ? (
+          <div className="flex flex-col space-y-2">
+            <label className="text-[#64748B] text-[15px] font-medium" htmlFor="email">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Please enter email"
+              className="w-full bg-[#F8FAFC] border-none rounded-xl px-4 py-4 text-[15px] text-slate-800 placeholder:text-[#CBD5E1] focus:outline-none focus:ring-1 focus:ring-[#32A05F] transition-shadow"
+              required
+            />
+          </div>
+        ) : (
+          <div className="flex flex-col space-y-2">
+            <label className="text-[#64748B] text-[15px] font-medium" htmlFor="mobile">
+              Mobile
+            </label>
+            <div className="flex items-center w-full bg-[#F8FAFC] rounded-xl px-4 py-4 focus-within:ring-1 focus-within:ring-[#32A05F] transition-shadow">
+              <div className="flex items-center pr-3 border-r border-[#E2E8F0] shrink-0">
+                <div className="flex h-[16px] w-[24px] shrink-0 overflow-hidden rounded-[2px] mr-2">
+                  <div className="w-1/3 h-full bg-[#008753]" />
+                  <div className="w-1/3 h-full bg-white" />
+                  <div className="w-1/3 h-full bg-[#008753]" />
+                </div>
+                <span className="text-[#64748B] text-[15px]">+234</span>
+              </div>
+              <input
+                id="mobile"
+                type="tel"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                placeholder="0800 000 0000"
+                className="flex-1 bg-transparent border-none pl-3 text-[15px] text-slate-800 placeholder:text-[#CBD5E1] focus:outline-none"
+                required
+              />
+            </div>
+          </div>
+        )}
 
         {/* Password Field */}
         <div className="flex flex-col space-y-2">
