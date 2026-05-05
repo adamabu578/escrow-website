@@ -45,7 +45,13 @@ export default function Login() {
       </div>
 
       {/* Form Section */}
-      <form className="flex flex-col space-y-6" onSubmit={(e) => e.preventDefault()}>
+      <form 
+        className="flex flex-col space-y-6" 
+        onSubmit={(e) => {
+          e.preventDefault();
+          router.push('/dashboard');
+        }}
+      >
         
         {/* Dynamic Field */}
         {loginMethod === 'email' ? (

@@ -1,16 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import { Menu, User, Bell, ChevronDown, PenLine, Clock, Store, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { DrawerMenu } from '@/components/DrawerMenu';
 
 export default function Dashboard() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <main className="flex flex-col min-h-[100dvh] w-full bg-[#FAFAFA] px-6 py-8 selection:bg-emerald-100 font-sans pb-16">
       
       {/* Top Navigation */}
       <div className="flex justify-between items-center mb-8">
-        <button className="p-1 -ml-1 text-[#334155] focus:outline-none" aria-label="Menu">
+        <button onClick={() => setIsMenuOpen(true)} className="p-1 -ml-1 text-[#334155] focus:outline-none" aria-label="Menu">
           <Menu className="w-7 h-7" strokeWidth={2.5} />
         </button>
         <div className="flex items-center gap-4">
@@ -74,12 +77,12 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
-          className="bg-white rounded-[24px] p-5 shadow-sm border border-slate-100/50 flex flex-col justify-between aspect-square active:scale-[0.98] transition-transform text-left"
+          className="bg-white rounded-[20px] p-4 shadow-sm border border-slate-100/50 flex flex-col justify-between h-[110px] active:scale-[0.98] transition-transform text-left"
         >
-          <div className="w-12 h-12 rounded-full bg-[#32A05F] flex items-center justify-center mb-auto shadow-sm shadow-green-100">
-            <PenLine className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-full bg-[#32A05F] flex items-center justify-center mb-auto shadow-sm shadow-green-100">
+            <PenLine className="w-4 h-4 text-white" />
           </div>
-          <span className="text-[#475569] text-[16px] font-medium leading-[1.25]">
+          <span className="text-[#475569] text-[15px] font-medium leading-[1.2]">
             Create<br />Escrow
           </span>
         </motion.button>
@@ -89,12 +92,12 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
-          className="bg-white rounded-[24px] p-5 shadow-sm border border-slate-100/50 flex flex-col justify-between aspect-square active:scale-[0.98] transition-transform text-left"
+          className="bg-white rounded-[20px] p-4 shadow-sm border border-slate-100/50 flex flex-col justify-between h-[110px] active:scale-[0.98] transition-transform text-left"
         >
-          <div className="w-12 h-12 rounded-full bg-[#32A05F] flex items-center justify-center mb-auto shadow-sm shadow-green-100">
-            <Clock className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-full bg-[#32A05F] flex items-center justify-center mb-auto shadow-sm shadow-green-100">
+            <Clock className="w-4 h-4 text-white" />
           </div>
-          <span className="text-[#475569] text-[16px] font-medium leading-[1.25]">
+          <span className="text-[#475569] text-[15px] font-medium leading-[1.2]">
             Pending<br />Escrow
           </span>
         </motion.button>
@@ -104,12 +107,12 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.3 }}
-          className="bg-white rounded-[24px] p-5 shadow-sm border border-slate-100/50 flex flex-col justify-between aspect-square active:scale-[0.98] transition-transform text-left"
+          className="bg-white rounded-[20px] p-4 shadow-sm border border-slate-100/50 flex flex-col justify-between h-[110px] active:scale-[0.98] transition-transform text-left"
         >
-          <div className="w-12 h-12 rounded-full bg-[#32A05F] flex items-center justify-center mb-auto shadow-sm shadow-green-100">
-            <Store className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-full bg-[#32A05F] flex items-center justify-center mb-auto shadow-sm shadow-green-100">
+            <Store className="w-4 h-4 text-white" />
           </div>
-          <span className="text-[#475569] text-[16px] font-medium leading-[1.25]">
+          <span className="text-[#475569] text-[15px] font-medium leading-[1.2]">
             Create a<br />Store
           </span>
         </motion.button>
@@ -119,18 +122,19 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.4 }}
-          className="bg-white rounded-[24px] p-5 shadow-sm border border-slate-100/50 flex flex-col justify-between aspect-square active:scale-[0.98] transition-transform text-left"
+          className="bg-white rounded-[20px] p-4 shadow-sm border border-slate-100/50 flex flex-col justify-between h-[110px] active:scale-[0.98] transition-transform text-left"
         >
-          <div className="w-12 h-12 rounded-full bg-[#32A05F] flex items-center justify-center mb-auto shadow-sm shadow-green-100">
-            <ShoppingCart className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-full bg-[#32A05F] flex items-center justify-center mb-auto shadow-sm shadow-green-100">
+            <ShoppingCart className="w-4 h-4 text-white" />
           </div>
-          <span className="text-[#475569] text-[16px] font-medium leading-[1.25]">
+          <span className="text-[#475569] text-[15px] font-medium leading-[1.2]">
             Shop
           </span>
         </motion.button>
 
       </div>
 
+      <DrawerMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </main>
   );
 }
