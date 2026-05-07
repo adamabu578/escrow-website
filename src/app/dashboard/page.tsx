@@ -73,19 +73,21 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 gap-4">
         
         {/* Create Escrow */}
-        <motion.button 
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="bg-white rounded-[20px] p-4 shadow-sm border border-slate-100/50 flex flex-col justify-between h-[110px] active:scale-[0.98] transition-transform text-left"
-        >
-          <div className="w-10 h-10 rounded-full bg-[#32A05F] flex items-center justify-center mb-auto shadow-sm shadow-green-100">
-            <PenLine className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-[#475569] text-[15px] font-medium leading-[1.2]">
-            Create<br />Escrow
-          </span>
-        </motion.button>
+        <Link href="/transaction" className="block outline-none">
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="bg-white rounded-[20px] p-4 shadow-sm border border-slate-100/50 flex flex-col justify-between h-[110px] active:scale-[0.98] transition-transform text-left cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-full bg-[#32A05F] flex items-center justify-center mb-auto shadow-sm shadow-green-100">
+              <PenLine className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-[#475569] text-[15px] font-medium leading-[1.2]">
+              Create<br />Escrow
+            </span>
+          </motion.div>
+        </Link>
 
         {/* Pending Escrow */}
         <motion.button 
