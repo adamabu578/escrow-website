@@ -63,13 +63,13 @@ export default function RegisterCountry() {
             required
           >
             <option value="" disabled>Select country</option>
-            <option value="Nigeria">Nigeria</option>
-            <option value="United States">United States</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="Canada">Canada</option>
-            <option value="Ghana">Ghana</option>
-            <option value="Kenya">Kenya</option>
-            <option value="South Africa">South Africa</option>
+            <option value="Nigeria" className="text-black">Nigeria</option>
+            <option value="United States" className="text-black">United States</option>
+            <option value="United Kingdom" className="text-black">United Kingdom</option>
+            <option value="Canada" className="text-black">Canada</option>
+            <option value="Ghana" className="text-black">Ghana</option>
+            <option value="Kenya" className="text-black">Kenya</option>
+            <option value="South Africa" className="text-black">South Africa</option>
           </select>
           <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#94A3B8] pointer-events-none" />
         </div>
