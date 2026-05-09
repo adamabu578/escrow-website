@@ -12,7 +12,7 @@ export default function RegisterCountry() {
   const handleContinue = (e: React.FormEvent) => {
     e.preventDefault();
     if (country) {
-      router.push('/register/details');
+      router.push(`/register/details?country=${encodeURIComponent(country)}`);
     }
   };
 

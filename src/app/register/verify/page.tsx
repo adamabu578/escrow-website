@@ -3,18 +3,48 @@
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
+import { authApi } from '@/lib/api';
 
 function VerifyContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || 'sharon16@gmail.com';
   const [code, setCode] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handleVerify = (e: React.FormEvent) => {
+  const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle verification logic here
-    if (code) {
+    setError('');
+    setMessage('');
+    
+    if (!code) return;
+
+    setLoading(true);
+    try {
+      await authApi.verify({ email, code });
       router.push('/register/success'); 
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    setError('');
+    setMessage('');
+    setResendLoading(true);
+
+    try {
+      await authApi.resendVerification({ email });
+      setMessage('Verification code has been resent to your email.');
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -60,9 +90,11 @@ function VerifyContent() {
             />
             <button
               type="button"
-              className="text-[#32A05F] text-[15px] font-medium hover:text-green-700 transition-colors ml-2 shrink-0"
+              onClick={handleResend}
+              disabled={resendLoading}
+              className="text-[#32A05F] text-[15px] font-medium hover:text-green-700 transition-colors ml-2 shrink-0 disabled:opacity-50"
             >
-              Send Code
+              {resendLoading ? 'Sending...' : 'Send Code'}
             </button>
           </div>
           <button
@@ -76,12 +108,22 @@ function VerifyContent() {
 
         {/* Verify Button */}
         <div>
+          {error && (
+            <div className="mb-4 text-red-500 text-sm text-center">
+              {error}
+            </div>
+          )}
+          {message && (
+            <div className="mb-4 text-green-600 text-sm text-center">
+              {message}
+            </div>
+          )}
           <button
             type="submit"
-            disabled={!code}
+            disabled={!code || loading}
             className="w-full bg-[#32A05F] text-white py-4 rounded-xl text-[17px] font-medium hover:bg-green-700 transition-colors shadow-sm active:scale-[0.98] disabled:opacity-70 disabled:hover:bg-[#32A05F] disabled:cursor-not-allowed"
           >
-            Verify
+            {loading ? 'Verifying...' : 'Verify'}
           </button>
         </div>
 

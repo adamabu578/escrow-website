@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { authApi } from '@/lib/api';
 
 export default function Login() {
   const router = useRouter();
@@ -13,6 +14,44 @@ export default function Login() {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const payload = loginMethod === 'email' 
+        ? { email, password }
+        : { 
+            phone: { dialCode: "+234", number: mobile, isoCode: "NG" }, 
+            password 
+          };
+
+      const data = await authApi.login(payload);
+
+      // Normally we would save the token here, e.g. localStorage.setItem('token', data.token);
+      router.push('/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDemoLogin = () => {
+    setLoading(true);
+    setError('');
+    // Simulate network delay for realistic feel
+    setTimeout(() => {
+      setLoading(false);
+      // Optional: you can set a dummy token here if your app checks for it
+      // localStorage.setItem('token', 'demo_token');
+      router.push('/dashboard');
+    }, 800);
+  };
 
   return (
     <main className="flex flex-col min-h-[100dvh] w-full bg-white px-6 py-8 selection:bg-emerald-100 font-sans">
@@ -47,10 +86,7 @@ export default function Login() {
       {/* Form Section */}
       <form 
         className="flex flex-col space-y-6" 
-        onSubmit={(e) => {
-          e.preventDefault();
-          router.push('/dashboard');
-        }}
+        onSubmit={handleLogin}
       >
         
         {/* Dynamic Field */}
@@ -151,12 +187,27 @@ export default function Login() {
         </div>
 
         {/* Login Button */}
-        <div className="pt-6">
+        <div className="pt-6 space-y-3">
+          {error && (
+            <div className="mb-4 text-red-500 text-sm text-center">
+              {error}
+            </div>
+          )}
           <button
             type="submit"
-            className="w-full bg-[#32A05F] text-white py-4 rounded-xl text-[17px] font-medium hover:bg-green-700 transition-colors shadow-sm active:scale-[0.98]"
+            disabled={loading}
+            className="w-full bg-[#32A05F] text-white py-4 rounded-xl text-[17px] font-medium hover:bg-green-700 transition-colors shadow-sm active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+          
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            disabled={loading}
+            className="w-full bg-[#F1F5F9] text-[#475569] border border-[#E2E8F0] py-4 rounded-xl text-[17px] font-medium hover:bg-[#E2E8F0] transition-colors shadow-sm active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+          >
+            Demo Login
           </button>
         </div>
 

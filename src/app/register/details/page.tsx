@@ -1,25 +1,56 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { authApi } from '@/lib/api';
 
-export default function RegisterDetails() {
+function RegisterDetailsContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const country = searchParams.get('country') || '';
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [referralId, setReferralId] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (agreedToTerms) {
+    setError('');
+    
+    if (!agreedToTerms) {
+      setError('You must agree to the terms of service');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await authApi.register({
+        name,
+        email,
+        password,
+        country,
+        ...(referralId && { referralCode: referralId }),
+      });
+
       router.push(`/register/verify?email=${encodeURIComponent(email)}`);
+    } catch (err: any) {
+      setError(err.message || 'Something went wrong');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,6 +81,22 @@ export default function RegisterDetails() {
       {/* Form Section */}
       <form className="flex flex-col space-y-6 flex-1" onSubmit={handleRegister}>
         
+        {/* Name Field */}
+        <div className="flex flex-col space-y-2">
+          <label className="text-[#64748B] text-[15px] font-medium" htmlFor="name">
+            Full Name
+          </label>
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Please enter your full name"
+            className="w-full bg-[#F8FAFC] border-none rounded-xl px-4 py-4 text-[15px] text-slate-800 placeholder:text-[#CBD5E1] focus:outline-none focus:ring-1 focus:ring-[#32A05F] transition-shadow"
+            required
+          />
+        </div>
+
         {/* Email Field */}
         <div className="flex flex-col space-y-2">
           <label className="text-[#64748B] text-[15px] font-medium" htmlFor="email">
@@ -143,11 +190,17 @@ export default function RegisterDetails() {
 
         {/* Register Button and Terms */}
         <div className="pt-4 mt-auto">
+          {error && (
+            <div className="mb-4 text-red-500 text-sm text-center">
+              {error}
+            </div>
+          )}
           <button
             type="submit"
-            className="w-full bg-[#32A05F] text-white py-4 rounded-xl text-[17px] font-medium hover:bg-green-700 transition-colors shadow-sm active:scale-[0.98] mb-6"
+            disabled={loading}
+            className="w-full bg-[#32A05F] text-white py-4 rounded-xl text-[17px] font-medium hover:bg-green-700 transition-colors shadow-sm active:scale-[0.98] mb-6 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Register
+            {loading ? 'Registering...' : 'Register'}
           </button>
           
           <label className="flex items-start justify-center space-x-3 cursor-pointer group px-2">
@@ -173,5 +226,13 @@ export default function RegisterDetails() {
 
       </form>
     </main>
+  );
+}
+
+export default function RegisterDetails() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <RegisterDetailsContent />
+    </Suspense>
   );
 }
